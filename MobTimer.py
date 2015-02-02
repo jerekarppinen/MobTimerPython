@@ -17,6 +17,7 @@ def startTimer():
 		m, s = divmod(round(timer() - start,2), 60)
 		h, m = divmod(m, 60)
 		sys.stdout.write("\rTime: %d:%02d:%02d" % (h, m, s))
+		sys.stdout.flush()
 		#os.system("cls" if os.name == "nt" else "clear")
 		if timer() - start >= input * 60:
 			root.deiconify()
