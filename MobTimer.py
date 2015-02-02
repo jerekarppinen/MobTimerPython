@@ -1,10 +1,10 @@
 #Developed in Python 2.7.6 environment
 #Requires python-tk package installed
-
 from timeit import default_timer as timer
 from Tkinter import *
 import Tkinter as tk
 import os
+import time
 
 def startTimer():
 	
@@ -16,14 +16,13 @@ def startTimer():
 		#print round(timer() - start,2)
 		m, s = divmod(round(timer() - start,2), 60)
 		h, m = divmod(m, 60)
-		print "%d:%02d:%02d" % (h, m, s)
-		os.system("cls" if os.name == "nt" else "clear")
+		sys.stdout.write("\rTime: %d:%02d:%02d" % (h, m, s))
+		#os.system("cls" if os.name == "nt" else "clear")
 		if timer() - start >= input * 60:
 			root.deiconify()
 			break
-			
-		
-		
+		time.sleep(0.1)
+
 root = tk.Tk()
 root.attributes("-zoomed", 1)
 
