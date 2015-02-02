@@ -19,10 +19,12 @@ def startTimer():
 		sys.stdout.write("\rTime: %d:%02d:%02d" % (h, m, s))
 		sys.stdout.flush()
 		#os.system("cls" if os.name == "nt" else "clear")
+
+		time.sleep(0.1)
+
 		if timer() - start >= input * 60:
 			root.deiconify()
 			break
-		time.sleep(0.1)
 
 root = tk.Tk()
 root.attributes("-zoomed", 1)
