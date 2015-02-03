@@ -6,35 +6,55 @@ import Tkinter as tk
 import os
 import time
 
-def startTimer():
+import InputStringParser
+
+class MobTimer():
+
+	def __init__(self):
 	
-	input = int(text.get("1.0",END))
-	root.withdraw()
+		self.root = tk.Tk()
+		self.root.attributes("-zoomed", 1)
 
-	start = timer()
-	while timer() - start <= input * 60:
-		#print round(timer() - start,2)
-		m, s = divmod(round(timer() - start,2), 60)
-		h, m = divmod(m, 60)
-		sys.stdout.write("\rTime: %d:%02d:%02d" % (h, m, s))
-		sys.stdout.flush()
-		#os.system("cls" if os.name == "nt" else "clear")
+		self.text = tk.Text(width = 30, height = 0.8, font=('Helvetica', 32))
+		self.text.pack(side="top", expand=True)
+		self.text.insert(1.0, "15")
 
-		time.sleep(0.1)
+		self.button = Button(self.root, text="Start the timer!", font='Helvetica', bg='lightblue', width=50, command=self.startTimer)
+		self.button.pack(side="top", expand=True)
 
-		if timer() - start >= input * 60:
-			root.deiconify()
-			break
+		self.root.mainloop()			
 
-root = tk.Tk()
-root.attributes("-zoomed", 1)
+	def keyPressed(self):
+		pass
+		# todo: figure out a way to get key pressed events work while tkinter frame is withdrawn
 
-text = tk.Text(width = 30, height = 0.8, font=('Helvetica', 32))
-text.pack(side="top", expand=True)
-text.insert(1.0, "15")
+	def startTimer(self):
+		
+		#self.root.bind_all('<Key>', self.keyPressed)
 
-button = Button(root, text="Start the timer!", font='Helvetica', bg='lightblue', width=50, command=startTimer)
-button.pack(side="top", expand=True)
+		# todo: warn user if input is empty
+		# and dont accept any other string-characters except for h,m,s
+		inputRaw = str(self.text.get("1.0",END))
 
-root.mainloop()
+		try:
+			inputRaw = int(inputRaw)
+			inputParsed = inputRaw * 60
+		except Exception as e:
+			inputParsed = InputStringParser.InputStringParser(inputRaw).countTotalSeconds()
 
+		self.root.withdraw()
+
+		start = timer()
+		while timer() - start <= inputParsed:
+			m, s = divmod(round(timer() - start, 2), 60)
+			h, m = divmod(m, 60)
+		 	sys.stdout.write("\rTime: %d:%02d:%02d" % (h, m, s))
+			sys.stdout.flush()
+
+			time.sleep(0.1)
+
+			if timer() - start >= inputParsed:
+				self.root.deiconify()
+				break
+
+MobTimer()
