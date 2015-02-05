@@ -45,6 +45,6 @@ class InputStringParser():
 		s = int(self.sTimeNumber)
 
 		minutes = m * 60
-		hours = h * 360
+		hours = h * 3600
 
 		return minutes + s + hours
