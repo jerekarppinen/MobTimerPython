@@ -11,18 +11,28 @@ import InputStringParser
 class MobTimer():
 
 	def __init__(self):
-	
+
+		self.delta = 0
+
+		self.displayTimer()			
+
+	def displayTimer(self):
+
 		self.root = tk.Tk()
 		self.root.attributes("-zoomed", 1)
 
 		self.text = tk.Text(width = 30, height = 0.8, font=('Helvetica', 32))
 		self.text.pack(side="top", expand=True)
-		self.text.insert(1.0, "15")
+
+		if self.delta > 0:
+			self.text.insert(1.0, self.delta)
+		elif self.delta == 0:
+			self.text.insert(1.0, "15m")
 
 		self.button = Button(self.root, text="Start the timer!", font='Helvetica', bg='lightblue', width=50, command=self.startTimer)
 		self.button.pack(side="top", expand=True)
 
-		self.root.mainloop()			
+		self.root.mainloop()
 
 	def keyPressed(self):
 		pass
@@ -64,9 +74,10 @@ class MobTimer():
 					break
 
 			except KeyboardInterrupt:
+				self.delta = timer() - start  # todo: write a method to format seconds to readable format
 				print "\nInterrupted"
 				self.root.destroy()
-				MobTimer()
+				self.displayTimer()
 				break
 
 MobTimer()
