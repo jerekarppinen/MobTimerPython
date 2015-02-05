@@ -6,6 +6,8 @@ import Tkinter as tk
 import os
 import time
 
+from collections import OrderedDict
+
 import InputStringParser
 
 class MobTimer():
@@ -74,10 +76,24 @@ class MobTimer():
 					break
 
 			except KeyboardInterrupt:
-				self.delta = timer() - start  # todo: write a method to format seconds to readable format
+				self.delta = self.seconds_to_human(inputParsed - (timer() - start))
 				print "\nInterrupted"
 				self.root.destroy()
 				self.displayTimer()
 				break
+
+	# function taken from http://thomassileo.com/blog/2013/03/31/how-to-convert-seconds-to-human-readable-interval-back-and-forth-with-python/
+	def seconds_to_human(self, seconds):
+
+		interval_dict = OrderedDict([("Y", 365*86400), ("M", 30*86400), ("W", 7*86400), ("D", 86400), ("h", 3600), ("m", 60), ("s", 1)])      
+
+		seconds = int(seconds)
+		string = ""
+		for unit, value in interval_dict.items():
+			subres = seconds / value
+			if subres:
+				seconds -= value * subres
+				string += str(subres) + unit
+		return string
 
 MobTimer()
