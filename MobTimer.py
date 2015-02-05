@@ -46,15 +46,26 @@ class MobTimer():
 
 		start = timer()
 		while timer() - start <= inputParsed:
-			m, s = divmod(round(timer() - start, 2), 60)
-			h, m = divmod(m, 60)
-		 	sys.stdout.write("\rTime: %d:%02d:%02d" % (h, m, s))
-			sys.stdout.flush()
 
-			time.sleep(0.1)
+			# try - exception structure to detect if loop is terminated by key interrupt (ctrl+c)
 
-			if timer() - start >= inputParsed:
-				self.root.deiconify()
-				break
+			try:
+
+				m, s = divmod(round(timer() - start, 2), 60)
+				h, m = divmod(m, 60)
+			 	sys.stdout.write("\rTime: %d:%02d:%02d" % (h, m, s))
+				sys.stdout.flush()
+
+				# sleep to lower CPU usage
+				time.sleep(0.1)
+
+				if timer() - start >= inputParsed:
+					self.root.deiconify()
+					break
+
+			except KeyboardInterrupt:
+				print "\nInterrupted"
+				self.root.destroy()
+				MobTimer()
 
 MobTimer()
