@@ -67,5 +67,6 @@ class MobTimer():
 				print "\nInterrupted"
 				self.root.destroy()
 				MobTimer()
+				break
 
 MobTimer()
