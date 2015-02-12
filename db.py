@@ -11,8 +11,20 @@ except Exception as e:
 	db.rollback()
 	raise e
 
-finally:
-	db.close()
+#finally:
+	#db.close()
+
+def addUser(name):
+	cursor.execute("INSERT INTO users (name) VALUES (?)", (name,))
+	db.commit()
+
+def getUsers():
+	cursor.execute("SELECT id, name FROM users")
+	return cursor.fetchall()
+
+#addUser("touko")
+
+#print getUsers()
 
 #cursor.execute('''CREATE TABLE users(id INTEGER PRIMARY KEY, name TEXT)''')
 #db.commit()

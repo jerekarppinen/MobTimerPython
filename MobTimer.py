@@ -9,6 +9,7 @@ import time
 from collections import OrderedDict
 
 import InputStringParser
+import db
 
 class MobTimer():
 
@@ -23,9 +24,31 @@ class MobTimer():
 		self.root = tk.Tk()
 		self.root.attributes("-zoomed", 1)
 
-		self.text = tk.Text(width = 30, height = 0.8, font=('Helvetica', 32))
+		self.usersText = tk.Text(width = 10, height = 0.8, font=('Helvetica', 28))
+		self.usersText.pack()
+		self.usersText.place(bordermode=OUTSIDE, height=50, width=300)
+
+		self.addUserButton = Button(self.root, text="Add user", font='Helvetica', bg='lightblue', width=50, command=self.addUser)
+		self.addUserButton.pack()
+		self.addUserButton.place(bordermode=OUTSIDE, height=50, width=100, x=300)
+
+		# retrieve added users from db
+		users = db.getUsers()
+
+		listbox = Listbox(self.root)
+		listbox.pack()
+		for row in users:
+			listbox.insert(END, row[1])
+
+		#deleteButton = Button(self.root, text="Delete", command=lambda listbox=listbox: listbox.delete(ANCHOR))
+		deleteButton = Button(self.root, text="Delete", command=self.deleteFromList)
+		deleteButton.pack()
+
+
+		self.text = tk.Text(width = 10, height = 0.8, font=('Helvetica', 32))
 		self.text.pack(side="top", expand=True)
 
+		# if program was keyboard interrupted and there's some time left
 		if self.delta > 0:
 			self.text.insert(1.0, self.delta)
 		elif self.delta == 0:
@@ -36,17 +59,19 @@ class MobTimer():
 
 		self.root.mainloop()
 
-	def keyPressed(self):
-		pass
-		# todo: figure out a way to get key pressed events work while tkinter frame is withdrawn
+	def deleteFromList(self):
+		listbox.delete(ANCHOR)
 
 	def startTimer(self):
-		
-		#self.root.bind_all('<Key>', self.keyPressed)
 
 		# todo: warn user if input is empty
 		# and dont accept any other string-characters except for h,m,s
 		inputRaw = str(self.text.get("1.0",END))
+
+		# length == 1 equals empty input (for some reason)
+		if len(inputRaw) == 1:
+			self.root.destroy()
+			self.displayTimer()
 
 		try:
 			inputRaw = int(inputRaw)
@@ -95,5 +120,22 @@ class MobTimer():
 				seconds -= value * subres
 				string += str(subres) + unit
 		return string
+
+	def addUser(self):
+		
+		inputRaw = str(self.usersText.get("1.0",END))
+		
+		# if input is empty, destroy
+		if len(inputRaw) == 1:
+			self.root.destroy()
+			self.displayTimer()
+
+		db.addUser(inputRaw)
+
+		self.root.destroy()
+		self.displayTimer()
+
+
+
 
 MobTimer()
