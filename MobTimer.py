@@ -21,7 +21,9 @@ class MobTimer():
 	def displayTimer(self):
 
 		self.root = tk.Tk()
-		self.root.attributes("-zoomed", 1)
+		
+		if os.name != "nt":
+			self.root.attributes("-zoomed", 1)
 
 		self.text = tk.Text(width = 30, height = 0.8, font=('Helvetica', 32))
 		self.text.pack(side="top", expand=True)
